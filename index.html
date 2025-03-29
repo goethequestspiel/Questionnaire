@@ -121,7 +121,7 @@
 
             fetch("https://script.google.com/macros/s/AKfycbydw4w-CG1O12rZivE8_0JfHxM0OZ1HqLLw-WKj3zu_Pv61Z8F4-HgOyAEedSRCIgeEaw/exec", {
                 method: "POST",
-                body: new FormData(document.getElementById("myForm"))
+                body: new FormData(document.getElementById("surveyForm"))
             })
             .then(response => response.text())
             .then(data => {
