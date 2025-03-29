@@ -1,4 +1,10 @@
-<style>
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Опитувальник</title>
+    <style>
         body {
             font-family: Arial, sans-serif;
             max-width: 600px;
@@ -59,44 +65,42 @@
         
         <h3>Тест: Шкала оптимістичного стану</h3>
         <p>(Оцінка від 1 до 5, де 1 – "зовсім не згоден", 5 – "повністю згоден")</p>
-        <script>
-            const optimismQuestions = [
-                "Я з оптимізмом дивлюся на життєві виклики.",
-                "Зараз я очікую, що все піде на краще.",
-                "Я відчуваю оптимізм щодо свого майбутнього.",
-                "Я відчуваю, що сьогодні (у найближчі 24 години) станеться щось хороше.",
-                "Майбутнє здається мені світлим.",
-                "На даний момент я очікую більше того, що все вийде правильно, ніж неправильно, коли справа стосується мого майбутнього.",
-                "Я очікую, що все обернеться добре."
-            ];
-        </script>
         <div id="optimismTest"></div>
         
         <h3>Тест: Шкала втоми (FACIT)</h3>
         <p>(Оцінка від 0 до 4, де 0 – "зовсім не згоден", 4 – "повністю згоден")</p>
-        <script>
-            const fatigueQuestions = [
-                "Відчуваю себе знеможеним (-ою)...",
-                "Відчуваю слабкість в усьому тілі",
-                "Я почуваю себе в’яло (виснажено).",
-                "Відчуваю втому",
-                "Мені важко розпочати щось робити, тому що я стомлений (-а)...",
-                "Мені важко закінчувати щось робити, тому що я стомлений (-а)...",
-                "Я маю сили",
-                "Я спроможний (-а) займатися своїми звичайними справами",
-                "Мені потрібно спати вдень",
-                "Я занадто стомлений (-а), щоб їсти.",
-                "Мені потрібна допомога для виконання звичайних справ",
-                "Мене дратує, що надмірна втома утримує мене від тих зайнять, якими я хочу займатися",
-                "Мені доводиться обмежувати свою соціальну активність через втому"
-            ];
-        </script>
         <div id="fatigueTest"></div>
         
         <button type="button" onclick="submitForm()">Надіслати</button>
     </form>
     
     <script>
+        const optimismQuestions = [
+            "Я з оптимізмом дивлюся на життєві виклики.",
+            "Зараз я очікую, що все піде на краще.",
+            "Я відчуваю оптимізм щодо свого майбутнього.",
+            "Я відчуваю, що сьогодні (у найближчі 24 години) станеться щось хороше.",
+            "Майбутнє здається мені світлим.",
+            "На даний момент я очікую більше того, що все вийде правильно, ніж неправильно, коли справа стосується мого майбутнього.",
+            "Я очікую, що все обернеться добре."
+        ];
+
+        const fatigueQuestions = [
+            "Відчуваю себе знеможеним (-ою)...",
+            "Відчуваю слабкість в усьому тілі",
+            "Я почуваю себе в’яло (виснажено).",
+            "Відчуваю втому",
+            "Мені важко розпочати щось робити, тому що я стомлений (-а)...",
+            "Мені важко закінчувати щось робити, тому що я стомлений (-а)...",
+            "Я маю сили",
+            "Я спроможний (-а) займатися своїми звичайними справами",
+            "Мені потрібно спати вдень",
+            "Я занадто стомлений (-а), щоб їсти.",
+            "Мені потрібна допомога для виконання звичайних справ",
+            "Мене дратує, що надмірна втома утримує мене від тих зайнять, якими я хочу займатися",
+            "Мені доводиться обмежувати свою соціальну активність через втому"
+        ];
+
         function populateQuestions(questions, containerId) {
             const container = document.getElementById(containerId);
             questions.forEach((q, i) => {
@@ -112,29 +116,51 @@
                 container.appendChild(input);
             });
         }
-        
+
         populateQuestions(optimismQuestions, "optimismTest");
         populateQuestions(fatigueQuestions, "fatigueTest");
 
-        
+        function toggleOtherLocation() {
+            const locationSelect = document.getElementById("location");
+            const otherLocationInput = document.getElementById("otherLocation");
+            if (locationSelect.value === "Інше") {
+                otherLocationInput.style.display = "block";
+                otherLocationInput.required = true;
+            } else {
+                otherLocationInput.style.display = "none";
+                otherLocationInput.required = false;
+            }
+        }
+
         function submitForm() {
-            console.log("Форма відправляється...");
-        
+            const formData = new FormData();
+            
+            let location = document.getElementById("location").value;
+            if (location === "Інше") {
+                location = document.getElementById("otherLocation").value;
+            }
+            formData.append("location", location);
+            
+            formData.append("age", document.getElementById("age").value);
+            formData.append("gender", document.getElementById("gender").value);
+            formData.append("employment", document.getElementById("employment").value);
+            
+            // Додаємо відповіді на тести
+            for (let i = 0; i < 7; i++) {
+                formData.append("optimismTest" + (i+1), document.getElementById("optimismTest" + i).value);
+            }
+            for (let i = 0; i < 13; i++) {
+                formData.append("fatigueTest" + (i+1), document.getElementById("fatigueTest" + i).value);
+            }
+
             fetch("https://script.google.com/macros/s/AKfycbxV-dpaQfcDq2iKEYUlGoLnCGkKk4bujNqsg2SqGYoAAM_vCNB0a1sUHERLgku1D0lPIw/exec", {
                 method: "POST",
-                body: new FormData(document.getElementById("myForm"))
+                body: formData
             })
             .then(response => response.text())
-            .then(data => {
-                console.log("Відповідь сервера:", data);
-                alert("Дані успішно відправлені!");
-            })
-            .catch(error => {
-                console.error("Помилка:", error);
-                alert("Помилка при відправленні форми!");
-            });
+            .then(data => alert("Дані успішно відправлені!"))
+            .catch(error => alert("Помилка відправки: " + error));
         }
     </script>
-
 </body>
 </html>
