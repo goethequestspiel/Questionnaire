@@ -116,37 +116,13 @@
         populateQuestions(optimismQuestions, "optimismTest");
         populateQuestions(fatigueQuestions, "fatigueTest");
 
-        function submitForm() {
-            const form = document.getElementById("surveyForm");
-            const formData = new FormData(form);
-
-            fetch("https://script.google.com/macros/s/AKfycbxV-dpaQfcDq2iKEYUlGoLnCGkKk4bujNqsg2SqGYoAAM_vCNB0a1sUHERLgku1D0lPIw/exec", {
-                method: "POST",
-                body: formData
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP Error: ${response.status}`);
-                }
-                return response.text();
-            })
-            .then(data => {
-                console.log("Сервер відповів:", data);
-                alert("Сервер відповів: " + data);
-            })
-            .catch(error => {
-                console.error("Помилка відправлення:", error);
-                alert("Помилка відправлення: " + error.message);
-            });
-        }
-
         
         function submitForm() {
             console.log("Форма відправляється...");
-
+        
             fetch("https://script.google.com/macros/s/AKfycbxV-dpaQfcDq2iKEYUlGoLnCGkKk4bujNqsg2SqGYoAAM_vCNB0a1sUHERLgku1D0lPIw/exec", {
                 method: "POST",
-                body: new FormData(document.getElementById("surveyForm"))
+                body: new FormData(document.getElementById("myForm"))
             })
             .then(response => response.text())
             .then(data => {
@@ -157,7 +133,6 @@
                 console.error("Помилка:", error);
                 alert("Помилка при відправленні форми!");
             });
-
         }
     </script>
 
